@@ -61,15 +61,41 @@ class Vampire {
   // * when comparing Ansel and Sarah, Ansel is the closest common anscestor.
   // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
   closestCommonAncestor(vampire) {
-    if(vampire === this) {
-      return this;
-    }
-    if (this.offspring.includes(vampire)) {
-      return this;
-    }
     
   }
+// Returns the vampire object with that name, or null if no vampire exists with that name
+vampireWithName(name) {
+  // Traverse the tree using a depth-first search
+  let stack = [this];
+  while (stack.length > 0) {
+    let currentVampire = stack.pop();
+    if (currentVampire.name === name) {
+      return currentVampire;
+    }
+    stack.push(...currentVampire.offspring);
+  }
+  // If we reach this point, the vampire was not found
+  return null;
 }
+
+// Returns the total number of vampires that exist
+get totalDescendents() {
+  let count = 0;
+  const queue = [...this.offspring];
+  while (queue.length) {
+    const current = queue.shift();
+    count++;
+    queue.push(...current.offspring);
+  }
+  return count;
+}
+
+// Returns an array of all the vampires that were converted after 1980
+get allMillennialVampires() {
+  return this.offspring.filter(vampire => vampire.yearConverted >= 1980);
+}
+}
+
 
 module.exports = Vampire;
 
